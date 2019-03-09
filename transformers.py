@@ -9,29 +9,9 @@
 
 from numpy import ones_like
 import random
+import copy
 
-def PrintList(self, li, name="none"):
-	n=0
-	for i in li:
-		if(n!=1):
-			print(i)
-		else:
-			print(i,name)
-		n+=1
-	print()
 
-def PrintCube(self):
-	self.PrintList(self.faceU,"U")
-	self.PrintList(self.faceD,"D")
-	self.PrintList(self.faceL,"L")
-	self.PrintList(self.faceR,"R")
-	self.PrintList(self.faceF,"F")
-	self.PrintList(self.faceB,"B")
-
-def ListCopy(self,lito,lifrom):
-	for y in range(3):
-		for x in range(3):
-			lito[y][x] = lifrom[y][x]
 
 def UC(self):
 	temp = ones_like(self.faceU)			#top face rotation 90deg
@@ -40,15 +20,15 @@ def UC(self):
 			a=y
 			b=-x+2	
 			temp[y][x]=self.faceU[b][a]
-	self.ListCopy(self.faceU,temp)
-	self.ListCopy(temp,self.faceF)			#right to front top row
+	self.faceU = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceF)			#right to front top row
 	for x in range(3):
 		self.faceF[0][x] = self.faceR[0][x]
 	temp2 = ones_like(self.faceL)			#front to left top row
-	self.ListCopy(temp2,self.faceL)
+	temp2 = copy.deepcopy(self.faceL)
 	for x in range(3):
 		self.faceL[0][x] = temp[0][x]
-	self.ListCopy(temp,self.faceB)			#left to back top to bottom row
+	temp = copy.deepcopy(self.faceB)			#left to back top to bottom row
 	for x in range(3):
 		self.faceB[2][2-x] = temp2[0][x]
 	for x in range(3):						#back to right bottom to top row
@@ -62,15 +42,15 @@ def UCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceU[b][a]
-	self.ListCopy(self.faceU,temp)
-	self.ListCopy(temp,self.faceF)
+	self.faceU = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceF)
 	for x in range(3):
 		self.faceF[0][x] = self.faceL[0][x]
 	temp2 = ones_like(self.faceR)
-	self.ListCopy(temp2,self.faceR)
+	temp2 = copy.deepcopy(self.faceR)
 	for x in range(3):
 		self.faceR[0][x] = temp[0][x]
-	self.ListCopy(temp,self.faceB)
+	temp = copy.deepcopy(self.faceB)
 	for x in range(3):
 		self.faceB[2][2-x] = temp2[0][x]
 	for x in range(3):
@@ -84,15 +64,15 @@ def DC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceD[b][a]
-	self.ListCopy(self.faceD,temp)
-	self.ListCopy(temp,self.faceR)
+	self.faceD = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[2][i] = self.faceF[2][i]
 	temp2 = ones_like(self.faceB)
-	self.ListCopy(temp2,self.faceB)
+	temp2 = copy.deepcopy(self.faceB)
 	for i in range(3):
 		self.faceB[0][2-i] = temp[2][i]
-	self.ListCopy(temp,self.faceL)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[2][i] = temp2[0][2-i]
 	for i in range(3):
@@ -106,15 +86,15 @@ def DCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceD[b][a]
-	self.ListCopy(self.faceD,temp)
-	self.ListCopy(temp,self.faceL)
+	self.faceD = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[2][i] = self.faceF[2][i]
 	temp2 = ones_like(self.faceB)
-	self.ListCopy(temp2,self.faceB)
+	temp2 = copy.deepcopy(self.faceB)
 	for i in range(3):
 		self.faceB[0][i] = temp[2][2-i]
-	self.ListCopy(temp,self.faceR)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[2][i] = temp2[0][2-i]
 	for i in range(3):
@@ -128,15 +108,15 @@ def LC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceL[b][a]
-	self.ListCopy(self.faceL,temp)
-	self.ListCopy(temp,self.faceF)
+	self.faceL = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceF)
 	for i in range(3):
 		self.faceF[i][0] = self.faceU[i][0]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[i][0] = temp[i][0]
-	self.ListCopy(temp,self.faceB)
+	temp = copy.deepcopy(self.faceB)
 	for i in range(3):
 		self.faceB[i][0] = temp2[i][0]
 	for i in range(3):
@@ -150,15 +130,15 @@ def LCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceL[b][a]
-	self.ListCopy(self.faceL,temp)
-	self.ListCopy(temp,self.faceB)
+	self.faceL = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceB)
 	for i in range(3):
 		self.faceB[i][0] = self.faceU[i][0]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[i][0] = temp[i][0]
-	self.ListCopy(temp,self.faceF)
+	temp = copy.deepcopy(self.faceF)
 	for i in range(3):
 		self.faceF[i][0] = temp2[i][0]
 	for i in range(3):
@@ -172,15 +152,15 @@ def RC(self):
 			a=y
 			b=-x+2	
 			temp[y][x]=self.faceR[b][a]
-	self.ListCopy(self.faceR,temp)
-	self.ListCopy(temp,self.faceB)
+	self.faceR = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceB)
 	for y in range(3):
 		self.faceB[y][2] = self.faceU[y][2]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for y in range(3):
 		self.faceD[y][2] = temp[y][2]
-	self.ListCopy(temp,self.faceF)
+	temp = copy.deepcopy(self.faceF)
 	for y in range(3):
 		self.faceF[y][2] = temp2[y][2]
 	for y in range(3):
@@ -194,15 +174,15 @@ def RCC(self):
 			a=-y+2
 			b=x
 			temp[y][x]=self.faceR[b][a]
-	self.ListCopy(self.faceR,temp)
-	self.ListCopy(temp,self.faceU)
+	self.faceR = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceU)
 	for y in range(3):
 		self.faceU[y][2] = self.faceB[y][2]
 	temp2 = ones_like(self.faceF)
-	self.ListCopy(temp2,self.faceF)
+	temp2 = copy.deepcopy(self.faceF)
 	for y in range(3):
 		self.faceF[y][2] = temp[y][2]
-	self.ListCopy(temp,self.faceD)
+	temp = copy.deepcopy(self.faceD)
 	for y in range(3):
 		self.faceD[y][2] = temp2[y][2]
 	for y in range(3):
@@ -216,15 +196,15 @@ def FC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceF[b][a]
-	self.ListCopy(self.faceF,temp)
-	self.ListCopy(temp,self.faceR)
+	self.faceF = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[i][0] = self.faceU[2][i]
 	temp2 = ones_like(self.faceR)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[0][2-i] = temp[i][0]
-	self.ListCopy(temp,self.faceL)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[i][2] = temp2[0][i]
 	for i in range(3):
@@ -238,15 +218,15 @@ def FCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceF[b][a]
-	self.ListCopy(self.faceF,temp)
-	self.ListCopy(temp,self.faceL)
+	self.faceF = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[2-i][2] = self.faceU[2][i]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[0][i] = temp[i][2]
-	self.ListCopy(temp,self.faceR)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[2-i][0] = temp2[0][i]
 	for i in range(3):
@@ -260,15 +240,15 @@ def BC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceB[b][a]
-	self.ListCopy(self.faceB,temp)
-	self.ListCopy(temp,self.faceL)
+	self.faceB = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[i][0] = self.faceU[0][2-i]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[2][i] = temp[i][0]
-	self.ListCopy(temp,self.faceR)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[i][2] = temp2[2][2-i]
 	for i in range(3):
@@ -282,15 +262,15 @@ def BCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceB[b][a]
-	self.ListCopy(self.faceB,temp)
-	self.ListCopy(temp,self.faceR)
+	self.faceB = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceR)
 	for i in range(3):
 		self.faceR[i][2] = self.faceU[0][i]
 	temp2 = ones_like(self.faceD)
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for i in range(3):
 		self.faceD[2][i] = temp[2-i][2]
-	self.ListCopy(temp,self.faceL)
+	temp = copy.deepcopy(self.faceL)
 	for i in range(3):
 		self.faceL[i][0] = temp2[2][i]
 	for i in range(3):
@@ -304,21 +284,21 @@ def XC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceR[b][a]
-	self.ListCopy(self.faceR,temp)
-	self.ListCopy(temp,self.faceB)			#top to back					
-	self.ListCopy(self.faceB,self.faceU)
+	self.faceR = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceB)			#top to back					
+	self.faceB = copy.deepcopy(self.faceU)
 	temp2 = ones_like(self.faceD)			#back to bottom
-	self.ListCopy(temp2,self.faceD)
-	self.ListCopy(self.faceD,temp)	
-	self.ListCopy(temp,self.faceF)			#bottom to front
-	self.ListCopy(self.faceF,temp2)	
-	self.ListCopy(self.faceU,temp)			#front to top
+	temp2 = copy.deepcopy(self.faceD)
+	self.faceD = copy.deepcopy(temp)	
+	temp = copy.deepcopy(self.faceF)			#bottom to front
+	self.faceF = copy.deepcopy(temp2)	
+	self.faceU = copy.deepcopy(temp)			#front to top
 	for y in range(3):						#left rotation 90cc
 		for x in range(3):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceL[b][a]
-	self.ListCopy(self.faceL,temp)
+	self.faceL = copy.deepcopy(temp)
 	self.history.append("XC")
 
 def XCC(self):
@@ -328,21 +308,21 @@ def XCC(self):
 			a=-y+2
 			b=x
 			temp[y][x]=self.faceR[b][a]
-	self.ListCopy(self.faceR,temp)
-	self.ListCopy(temp,self.faceF)			#top to front					
-	self.ListCopy(self.faceF,self.faceU)
+	self.faceR = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceF)			#top to front					
+	self.faceF = copy.deepcopy(self.faceU)
 	temp2 = ones_like(self.faceD)			#front to bottom
-	self.ListCopy(temp2,self.faceD)
-	self.ListCopy(self.faceD,temp)	
-	self.ListCopy(temp,self.faceB)			#bottom to back
-	self.ListCopy(self.faceB,temp2)	
-	self.ListCopy(self.faceU,temp)			#back to top
+	temp2 = copy.deepcopy(self.faceD)
+	self.faceD = copy.deepcopy(temp)	
+	temp = copy.deepcopy(self.faceB)			#bottom to back
+	self.faceB = copy.deepcopy(temp2)	
+	self.faceU = copy.deepcopy(temp)			#back to top
 	for y in range(3):						#left rotation 90
 		for x in range(3):
 			a=y
 			b=-x+2	
 			temp[y][x]=self.faceL[b][a]
-	self.ListCopy(self.faceL,temp)
+	self.faceL = copy.deepcopy(temp)
 	self.history.append("XCC")
 
 def YC(self):
@@ -352,25 +332,25 @@ def YC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceU[b][a]
-	self.ListCopy(self.faceU,temp)
-	self.ListCopy(temp,self.faceL)			#front to left
-	self.ListCopy(self.faceL,self.faceF)
+	self.faceU = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceL)			#front to left
+	self.faceL = copy.deepcopy(self.faceF)
 	temp2 = ones_like(self.faceB)			#left to back with 180deg
-	self.ListCopy(temp2,self.faceB)
+	temp2 = copy.deepcopy(self.faceB)
 	for y in range(3):
 		for x in range(3):
 			self.faceB[y][x] = temp[2-y][2-x]
-	self.ListCopy(temp,self.faceR)			#back to right with 180deg
+	temp = copy.deepcopy(self.faceR)			#back to right with 180deg
 	for y in range(3):
 		for x in range(3):
 			self.faceR[y][x] = temp2[2-y][2-x]
-	self.ListCopy(self.faceF,temp)			#right to front
+	self.faceF = copy.deepcopy(temp)			#right to front
 	for y in range(3):						#bottom face rotation 90deg
 		for x in range(3):
 			a=-y+2
 			b=x	
 			temp[y][x] = self.faceD[b][a]
-	self.ListCopy(self.faceD,temp)
+	self.faceD = copy.deepcopy(temp)
 	self.history.append("YC")
 
 def YCC(self):
@@ -380,25 +360,25 @@ def YCC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceU[b][a]
-	self.ListCopy(self.faceU,temp)
-	self.ListCopy(temp,self.faceR)
-	self.ListCopy(self.faceR,self.faceF)
+	self.faceU = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceR)
+	self.faceR = copy.deepcopy(self.faceF)
 	temp2 = ones_like(self.faceB)
-	self.ListCopy(temp2,self.faceB)
+	temp2 = copy.deepcopy(self.faceB)
 	for y in range(3):
 		for x in range(3):
 			self.faceB[y][x] = temp[2-y][2-x]
-	self.ListCopy(temp,self.faceL)
+	temp = copy.deepcopy(self.faceL)
 	for y in range(3):
 		for x in range(3):
 			self.faceL[y][x] = temp2[2-y][2-x]
-	self.ListCopy(self.faceF,temp)
+	self.faceF = copy.deepcopy(temp)
 	for y in range(3):
 		for x in range(3):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceD[b][a]
-	self.ListCopy(self.faceD,temp)
+	self.faceD = copy.deepcopy(temp)
 	self.history.append("YCC")
 
 def ZC(self):
@@ -408,21 +388,21 @@ def ZC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceF[b][a]
-	self.ListCopy(self.faceF,temp)
-	self.ListCopy(temp,self.faceR)			#top to right with 90cc
+	self.faceF = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceR)			#top to right with 90cc
 	for y in range(3):
 		for x in range(3):
 			a=-y+2
 			b=x	
 			self.faceR[y][x]=self.faceU[b][a]
 	temp2 = ones_like(self.faceD)			#right to bottom with 90cc
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for y in range(3):
 		for x in range(3):
 			a=-y+2
 			b=x	
 			self.faceD[y][x]=temp[b][a]		
-	self.ListCopy(temp,self.faceL)			#bottom to left with 90cc
+	temp = copy.deepcopy(self.faceL)			#bottom to left with 90cc
 	for y in range(3):
 		for x in range(3):
 			a=-y+2
@@ -438,7 +418,7 @@ def ZC(self):
 			a=-y+2
 			b=x	
 			temp[y][x]=self.faceB[b][a]
-	self.ListCopy(self.faceB,temp)
+	self.faceB = copy.deepcopy(temp)
 	self.history.append("ZC")
 
 def ZCC(self):
@@ -448,21 +428,21 @@ def ZCC(self):
 			a=-y+2
 			b=x
 			temp[y][x]=self.faceF[b][a]
-	self.ListCopy(self.faceF,temp)
-	self.ListCopy(temp,self.faceL)			#top to left with 90
+	self.faceF = copy.deepcopy(temp)
+	temp = copy.deepcopy(self.faceL)			#top to left with 90
 	for y in range(3):
 		for x in range(3):
 			a=y
 			b=-x+2
 			self.faceL[y][x]=self.faceU[b][a]
 	temp2 = ones_like(self.faceD)			#left to bottom with 90
-	self.ListCopy(temp2,self.faceD)
+	temp2 = copy.deepcopy(self.faceD)
 	for y in range(3):
 		for x in range(3):
 			a=y
 			b=-x+2
 			self.faceD[y][x]=temp[b][a]		
-	self.ListCopy(temp,self.faceR)			#bottom to right with 90
+	temp = copy.deepcopy(self.faceR)			#bottom to right with 90
 	for y in range(3):
 		for x in range(3):
 			a=y
@@ -478,15 +458,15 @@ def ZCC(self):
 			a=y
 			b=-x+2
 			temp[y][x]=self.faceB[b][a]
-	self.ListCopy(self.faceB,temp)
+	self.faceB = copy.deepcopy(temp)
 	self.history.append("ZCC")
 
-def Scramble(self,number):
+def Scramble(self,number):			# Scrambles the cube with a parameterized number of random moves
 	possibilities = ["UC","UCC","DC","DCC","LC","LCC","RC","RCC","FC","FCC","BC","BCC"]
 	choices = []
-	for i in range(number):
+	for i in range(number):			# fills a list of random choices from the list of possibilities
 		choices.append(random.choice(possibilities))
-	for i in choices:
+	for i in choices:				# executes each move in the list of choices
 		if i == "UC":
 			self.UC()
 		elif i == "UCC":

@@ -8,8 +8,11 @@
 
 
 import copy
-def RealMovesOnly(history):
-	# move : actual motor
+def RealMovesOnly(history):		# returns a list of absolute moves excluding cube rotations
+	# Each dictionary is written for transcribing moves proceeding a particular cube rotation.
+	# For example, an Up Clockwise move after a cube X axis Clockwise rotation is actually a Front Clockwise move.
+
+	# relative move : absolute move
 	dicXC={'UC':'FC','UCC':'FCC','DC':'BC',
 	'DCC':'BCC','LC':'LC','LCC':'LCC',
 	'RC':'RC','RCC':'RCC','FC':'DC',
@@ -52,10 +55,10 @@ def RealMovesOnly(history):
 	'XC':'YCC','XCC':'YC','YC':'XC',
 	'YCC':'XCC','ZC':'ZC','ZCC':'ZCC'}
 
-	hisCopy = copy.deepcopy(history)
+	hisCopy = copy.deepcopy(history)		# making a copy of the history in to hisCopy
 	size = len(hisCopy)
-	for i in range(size):
-		if hisCopy[i] == 'XC':
+	for i in range(size):			# upon finding a cube rotation, for every move or rotation afterwards is transcribed
+		if hisCopy[i] == 'XC':		# 	using the corresponding dictionary
 			for x in range(i+1,size):
 				hisCopy[x]=dicXC[hisCopy[x]]
 		elif hisCopy[i] == 'XCC':
@@ -76,46 +79,46 @@ def RealMovesOnly(history):
 
 	undesireables = ['XC','XCC','YC','YCC','ZC','ZCC']
 	movesOnly = []
-	for i in hisCopy:
-		if i in undesireables:
+	for i in hisCopy:				# write every move in hisCopy to movesOnly except for cube rotations, 
+		if i in undesireables:		#	thereby making a list of absolute moves only
 			pass
 		else:
 			movesOnly.append(i)
 	return movesOnly
 
-def Compress(history):
+def Compress(history):		# returns a compressed version of history making up for inefficient moves such as four of the same move in a row
 	i=0
 	while i < len(history)-1:
 		change = True
-		while change and i < len(history)-1:
-			equiv1 = history[i] == history[i+1]
-			if len(history)-i>=3:
-				equiv2 = history[i] == history[i+2]
-			else:
-				equiv2 = False
-			if len(history)-i >=4:
-				equiv3 = history[i] == history[i+3]
-			else:
-				equiv3 = False
-			if equiv1 and equiv2 and equiv3:
-				del history[i]
+		while change and i < len(history)-1:			# allows us to assume the current element is at least 1 from the end
+			equiv1 = history[i] == history[i+1]			# stores bool for if element i equals the next element in equiv1
+			if len(history)-i>=3:						# if current element is more than 1 element from the end
+				equiv2 = history[i] == history[i+2]		# stores bool for if element i equals the next-next element in equiv2
+			else:										# if current element is fewer than 2 elements from the end...
+				equiv2 = False							# there is no equivalence for the next-next element
+			if len(history)-i >=4:						# if the current element is more than 2 elements from the end
+				equiv3 = history[i] == history[i+3]		# stores bool for if current element equals next-next-next element in equiv3
+			else:										# if the current element is fewer than 3...
+				equiv3 = False							# there is no equivalence for the next-next-next element
+			if equiv1 and equiv2 and equiv3:			# if the current element is the same as the next 3
+				del history[i]							# constitutes 360 deg so all four are removed
 				del history[i]
 				del history[i]
 				del history[i]
 
-			elif history[i][0] == history[i+1][0] and not equiv1:
-				del history[i]
-				del history[i]
+			elif history[i][0] == history[i+1][0] and not equiv1:	# else if the first letter of the current element equals " " " " second
+				del history[i]										# 	and the elements themselves are not equal
+				del history[i]										# constitutes a move and an opposite move. both are removed
 
-			elif equiv1 and equiv2:
-				if len(history[i]) == 2:
-					history[i] = history[i][0] + 'CC'
+			elif equiv1 and equiv2:							# otherwise, if the current element equals the next two
+				if len(history[i]) == 2:					# constitutes 270 deg. 
+					history[i] = history[i][0] + 'CC'		# change the current element to be opposite
 				elif len(history[i]) == 3:
 					history[i] = history[i][0] + 'C'
-				del history[i+1]
+				del history[i+1]							# delete the next two elements
 				del history[i+1]
 
-			else :
-				change = False
+			else :									# if there are no available compressions in range
+				change = False						# set change to false to move the current element by one
 		i+=1
-	return history
+	return history					# return the compressed history

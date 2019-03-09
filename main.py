@@ -12,7 +12,7 @@ from Transcriber import RealMovesOnly as Realify
 from Transcriber import Compress
 # import Piper
 
-faceU = [[0,0,0],[0,0,0],[0,0,0]]
+faceU = [[0,0,0],[0,0,0],[0,0,0]]		# Initial solved cube faces
 faceD = [[1,1,1],[1,1,1],[1,1,1]]
 faceL = [[2,2,2],[2,2,2],[2,2,2]]
 faceR = [[3,3,3],[3,3,3],[3,3,3]]
@@ -20,18 +20,18 @@ faceF = [[4,4,4],[4,4,4],[4,4,4]]
 faceB = [[5,5,5],[5,5,5],[5,5,5]]
 
 
-cube1 = Cube(faceU,faceD,faceL,faceR,faceF,faceB)
-cube1.Scramble(50)
-cube1.history = []
-cube1.PrintCube()
+cube1 = Cube(faceU,faceD,faceL,faceR,faceF,faceB)	# Instantiation for the object
+cube1.Scramble(50)			# Scrambles the cube with 50 random moves
+cube1.history = []			# Resets the cube's move history to empty
+cube1.PrintCube()			# Prints the faces of the scrambled cube to the console
 print()
 
-cube1.CompleteSolve()
-cube1.PrintCube()
-realMoves=Realify(cube1.history)
-print(len(realMoves))
-realMoves=Compress(realMoves)
-print(len(realMoves))
+cube1.CompleteSolve()		# Solves the cube
+cube1.PrintCube()			# Prints the faces of the cube 
+realMoves=Realify(cube1.history)	# Removes all cube rotations from history and converts relative tranformations to absolute
+print(len(realMoves))		# Prints the number of moves
+realMoves=Compress(realMoves)		# Compresses moves to be more efficient
+print(len(realMoves))		# Prints the number of moves
 
 
 # print(realMoves)

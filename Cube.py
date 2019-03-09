@@ -14,18 +14,35 @@ import copy
 class Cube:
 	def __init__(self, u, d, l, r, f, b):
 		self.faceU = copy.deepcopy(u)		#Andrew's help
-		self.faceD = copy.deepcopy(d)
+		self.faceD = copy.deepcopy(d)		# Initializes data members from parameters by value instead of making reference variables
 		self.faceL = copy.deepcopy(l)
 		self.faceR = copy.deepcopy(r)
 		self.faceF = copy.deepcopy(f)
 		self.faceB = copy.deepcopy(b)
 
-	history = []
+	history = []		# history log for all moves made by any transformer member function
 
+	def PrintList(self, li, name="none"):		# prints a formatted list of a face to the console
+		n=0
+		for i in li:
+			if(n!=1):
+				print(i)
+			else:
+				print(i,name)
+			n+=1
+		print()
+
+	def PrintCube(self):						# Prints the entire cube formatted by PrintList
+		self.PrintList(self.faceU,"U")
+		self.PrintList(self.faceD,"D")
+		self.PrintList(self.faceL,"L")
+		self.PrintList(self.faceR,"R")
+		self.PrintList(self.faceF,"F")
+		self.PrintList(self.faceB,"B")
 
 	# Solving Functions
 
-	AdjColor = solvers.AdjColor
+	AdjColor = solvers.AdjColor 			# Importing member function definitions from solvers file
 	AdjFaceColor = solvers.AdjFaceColor
 	IsSolved = solvers.IsSolved
 	SqColor = solvers.SqColor
@@ -44,10 +61,7 @@ class Cube:
 	
 	# Transforming Functions
 
-	PrintList = transformers.PrintList
-	PrintCube = transformers.PrintCube
-	ListCopy = transformers.ListCopy
-	UC  = transformers.UC 
+	UC  = transformers.UC 					# Importing member function definitions from transformers
 	UCC = transformers.UCC 
 	DC  = transformers.DC 
 	DCC = transformers.DCC 

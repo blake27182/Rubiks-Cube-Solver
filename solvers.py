@@ -12,8 +12,8 @@ import time
 
 # average move-count: 178
 
-def AdjColor(self,face,row,col,axis):
-	tempCube = copy.deepcopy(self)					#Turning the tempCube to face front
+def AdjColor(self,face,row,col,axis):		# Returns the contents (color) of an adjacent square (does not accept center squares)
+	tempCube = copy.deepcopy(self)					# Turning the tempCube to face front
 	if (face=='U'):
 		tempCube.XCC()
 	elif(face=='D'):								
@@ -30,7 +30,7 @@ def AdjColor(self,face,row,col,axis):
 	else:
 		print("Error AdjColor: invalid face")
 
-	if (axis=='Y'):									#Selecting an adjacent square
+	if (axis=='Y'):									#Selecting an adjacent square based on axis and position
 		newCol = col
 		if (row==0):
 			newRow = 2
@@ -47,7 +47,7 @@ def AdjColor(self,face,row,col,axis):
 			newCol = 0
 			return tempCube.faceR[newRow][newCol]
 
-def AdjFaceColor(self,face,row,col,axis):
+def AdjFaceColor(self,face,row,col,axis):		# Returns the contents (color) of the adjacent face (does not accept center squares)
 	tempCube = copy.deepcopy(self)
 	if (face=='U'):
 		tempCube.XCC()
@@ -76,7 +76,7 @@ def AdjFaceColor(self,face,row,col,axis):
 		elif (col==2):
 			return tempCube.faceR[1][1]
 
-def SqColor(self,face,row,col):
+def SqColor(self,face,row,col):				# Returns the contents (color) of a square (useful when face is unknown)
 	if (face=='U'):
 		return self.faceU[row][col]
 	elif(face=='D'):
@@ -90,7 +90,7 @@ def SqColor(self,face,row,col):
 	elif(face=='B'):
 		return self.faceB[row][col]
 
-def SqFaceColor(self,face):
+def SqFaceColor(self,face):					# Returns the value of the center square on any given face
 	if (face=='U'):
 		return self.faceU[1][1]
 	elif(face=='D'):
@@ -132,13 +132,13 @@ def IsCornerColor(self,face,color):				# Returns bool for if given color exists 
 	if (face=='B'):
 		return self.faceB[0][0]==color or self.faceB[0][2]==color or self.faceB[2][0]==color or self.faceB[2][2]==color
 
-def IsSolved(self,face,row,col):
-	xAxisCheck = self.AdjColor(face,row,col,'X')==self.AdjFaceColor(face,row,col,'X')		#Andrew's help
+def IsSolved(self,face,row,col):				# Returns a bool for if the "piece" on which a given square resides is solved
+	xAxisCheck = self.AdjColor(face,row,col,'X')==self.AdjFaceColor(face,row,col,'X')		#Andrew's help breaking up the comparison statement
 	yAxisCheck = self.AdjColor(face,row,col,'Y')==self.AdjFaceColor(face,row,col,'Y')
 	sameFaceCheck = self.SqColor(face,row,col)==self.SqFaceColor(face)
 	return xAxisCheck and yAxisCheck and sameFaceCheck
 
-def IsPositioned(self,face,row,col):
+def IsPositioned(self,face,row,col):			# Returns a bool for if the "piece" on which a given square resides is in the correct position
 	cornerColors = []
 	cornerColors.append(self.AdjFaceColor(face,row,col,'X'))
 	cornerColors.append(self.AdjFaceColor(face,row,col,'Y'))
@@ -148,7 +148,7 @@ def IsPositioned(self,face,row,col):
 	sameFaceCheck = self.SqColor(face,row,col) in cornerColors
 	return xAxisCheck and yAxisCheck and sameFaceCheck
 
-def SubSolveCount(self):
+def SubSolveCount(self):						# Returns the number of side pieces that are solved on the top face
 	count = 0
 	if self.IsSolved('U',0,1):
 		count+=1
@@ -160,30 +160,28 @@ def SubSolveCount(self):
 		count+=1
 	return count
 
-def GetWhiteCross(self):
-	start = time.time()
+def GetWhiteCross(self):						# The first major step in solving any rubik's cube (solves all four side pieces on the top)
+	start = time.time()				# while loop safe catch
 	while not (self.IsSolved('U',0,1) and self.IsSolved('U',1,0) and self.IsSolved('U',1,2) and self.IsSolved('U',2,1)):  
-																					# while the cross is not solved
-		if time.time()-start>2:
+																						# while the cross is not solved
+		if time.time()-start>2:			
 			raise Exception("infinite loop")
-		if (self.faceU[0][1]==0):					# move whites on top that arent solved
-			if(not self.IsSolved('U',0,1)):				# needs to loop at least once before function end
-				self.BCC()
-		if (self.faceU[1][0]==0):
-			if(not self.IsSolved('U',1,0)):
-				self.LCC()
-		if (self.faceU[1][2]==0):
-			if(not self.IsSolved('U',1,2)):
-				self.RCC()
-		if (self.faceU[2][1]==0):
-			if(not self.IsSolved('U',2,1)):
-				self.FCC()
+
+		if (self.faceU[0][1]==0 and not self.IsSolved('U',0,1)):					# move whites on top that arent solved				
+			self.BCC()																# needs to loop at least once before function end
+		if (self.faceU[1][0]==0 and not self.IsSolved('U',1,0)):
+			self.LCC()
+		if (self.faceU[1][2]==0 and not self.IsSolved('U',1,2)):
+			self.RCC()
+		if (self.faceU[2][1]==0 and not self.IsSolved('U',2,1)):		# if this piece is white and not solved
+			self.FCC()													# move it off the top face
 
 		while self.IsSideColor('F',0) or self.IsSideColor('R',0) or self.IsSideColor('B',0) or self.IsSideColor('L',0):
+																# while there is a white side square somewhere on the side faces
 			if time.time()-start>2:
 				raise Exception("infinite loop")
-			if (self.IsSideColor('F',0)):				# If theres a white on the front face...
-				while (self.faceF[1][2] != 0):		# move white square to the right position
+			if (self.IsSideColor('F',0)):				# If there's a white on the front face...
+				while (self.faceF[1][2] != 0):			# move white square to the right position
 					if time.time()-start>2:
 						raise Exception("infinite loop")
 					self.FC()
@@ -192,25 +190,25 @@ def GetWhiteCross(self):
 				self.DCC()
 				self.RC()
 
-				while self.faceF[1][1] != self.faceF[2][1]:	# move the bottom face until it matches middle
+				while self.faceF[1][1] != self.faceF[2][1]:		# move the bottom face until the bottom front square matches middle
 					if time.time()-start>2:
 						raise Exception("infinite loop")
 					self.DC()
 					self.YC()
 
-				self.FC()							# finish piece solve by moving to the top
+				self.FC()							# finish piece solve by moving it to the top
 				self.FC()
 
-			else:
+			else:			# there are no white squares on the front, rotate the cube
 				self.YC()
 
-		if self.IsSideColor('D',0):
+		if self.IsSideColor('D',0):			# if there is a white side square on the bottom face
 			while self.faceD[0][1] != 0:
 				if time.time()-start>2:
 					raise Exception("infinite loop")
-				self.YC()							# turn cube until white square on bottom face is on top
+				self.YC()							# rotate the cube until white square on bottom face is in the top position
 
-			while self.faceF[1][1] != self.faceF[2][1]:	# move the bottom face until it matches middle
+			while self.faceF[1][1] != self.faceF[2][1]:	# move the bottom face until the adjacent color matches the adjacent middle
 				if time.time()-start>2:
 					raise Exception("infinite loop")
 				self.DC()
@@ -219,12 +217,12 @@ def GetWhiteCross(self):
 			self.FC()								# finish piece solve by moving to the top
 			self.FC()
 
-def GetWhiteCorners(self):
-	start = time.time()
+def GetWhiteCorners(self):		# second major step in solving (solve all four corner pieces on the top)
+	start = time.time()				# while loop safe catch
 	while not (self.IsSolved('U',0,0) and self.IsSolved('U',0,2) and self.IsSolved('U',2,0) and self.IsSolved('U',2,2)):
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		for i in range(4):								# solve bottom right corner on top if positioned 
+		for i in range(4):								# solve bottom right corner on top if positioned correctly
 			if self.IsPositioned('F',2,2):
 				while not self.IsSolved('F',2,2):
 					if time.time()-start>2:
@@ -233,7 +231,7 @@ def GetWhiteCorners(self):
 					self.DCC()
 					self.RC()
 					self.DC()
-			elif self.faceU[2][2]==0:					# move if not positioned and white
+			elif self.faceU[2][2]==0:					# move to bottom layer if white but not in poisition
 				self.RCC()
 				self.DCC()
 				self.RC() 
@@ -241,21 +239,22 @@ def GetWhiteCorners(self):
 			self.YC()
 
 		while self.IsCornerColor('F',0) or self.IsCornerColor('R',0) or self.IsCornerColor('B',0) or self.IsCornerColor('L',0):
+																# while there is a white corner square somewhere on the side faces
 			if time.time()-start>2:
 				raise Exception("infinite loop")
 			if self.IsCornerColor('F',0):
-				if self.faceF[0][0] == 0:				# move white corner to bottom row
+				if self.faceF[0][0] == 0:				# move white corner to bottom row if on top row
 					self.FCC()
 					self.DCC()
 					self.FC()
 					self.DC()
-				elif self.faceF[0][2] == 0:
+				elif self.faceF[0][2] == 0:				# move white corner to bottom row if on top row
 					self.FC()
 					self.DC()
 					self.FCC()
 					self.DCC()
 
-				if self.faceF[2][0] == 0:				# solve corner on left side
+				if self.faceF[2][0] == 0:				# solve corner on left side bottom row
 					while self.AdjColor('F',2,0,'X') != self.AdjFaceColor('F',2,0,'X'):
 						if time.time()-start>2:
 							raise Exception("infinite loop")
@@ -267,7 +266,7 @@ def GetWhiteCorners(self):
 					self.RC()
 					self.DC()	
 
-				if self.faceF[2][2] == 0:				# solve corner on right side
+				if self.faceF[2][2] == 0:				# solve corner on right side bottom row
 					while self.AdjColor('F',2,2,'X') != self.AdjFaceColor('F',2,2,'X'):
 						if time.time()-start>2:
 							raise Exception("infinite loop")
@@ -279,20 +278,20 @@ def GetWhiteCorners(self):
 					self.LCC()
 					self.DCC()
 
-			else:
+			else:				# if there is no white corner square on the front, rotate the cube
 				self.YC()
 
-		if self.IsCornerColor('D',0):
-			while self.faceD[0][2] != 0:
+		if self.IsCornerColor('D',0):		# if there is a white corner square on the bottom face
+			while self.faceD[0][2] != 0:		# rotate the cube until it is in the top right position
 				if time.time()-start>2:
 					raise Exception("infinite loop")
 				self.YC()
-			while self.AdjColor('D',0,2,'X') != self.AdjFaceColor('D',0,2,'Y'):
-				if time.time()-start>2:
+			while self.AdjColor('D',0,2,'X') != self.AdjFaceColor('D',0,2,'Y'):		# move the bottom face until the piece is directly 
+				if time.time()-start>2:												#	below its solved position
 					raise Exception("infinite loop")
 				self.YC()
 				self.DC()
-			while not self.IsSolved('U',2,2):
+			while not self.IsSolved('U',2,2):			# solve the peice
 				if time.time()-start>2:
 					raise Exception("infinite loop")
 				self.RCC()
@@ -300,21 +299,21 @@ def GetWhiteCorners(self):
 				self.RC()
 				self.DC()
 
-def GetSides(self):
-	start = time.time()
+def GetSides(self):				# third major step in solving (solve the middle layer)
+	start = time.time()				# while loop safe catch
 	while not(self.IsSolved('F',1,0) and self.IsSolved('F',1,2) and self.IsSolved('B',1,0) and self.IsSolved('B',1,2)):
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		frontLeft = self.faceF[1][0]==1 or self.faceL[1][2]==1
+		frontLeft = self.faceF[1][0]==1 or self.faceL[1][2]==1		# breaking up conditional for if the middle layer contains a yellow square
 		frontRight = self.faceF[1][2]==1 or self.faceR[1][0]==1
 		backLeft = self.faceB[1][0]==1 or self.faceL[1][0]==1
 		backRight = self.faceB[1][2]==1 or self.faceR[1][2]==1
 		middleHasYellow = frontLeft or frontRight or backLeft or backRight
-		if not middleHasYellow:								# if all yellows are on top
+		if not middleHasYellow:								# if all yellow side squares are on top layer (previously the bottom layer)
 			while self.IsSolved('F',1,2):
 				if time.time()-start>2:
 					raise Exception("infinite loop")
-				self.YC()
+				self.YC()									# rotate the cube until the middle right piece is one that is not solved
 			self.UC()										# move a yellow down to the right into an unsolved spot
 			self.RC()
 			self.UCC()
@@ -328,12 +327,12 @@ def GetSides(self):
 				if time.time()-start>2:
 					raise Exception("infinite loop")
 				self.YC()
-			while self.SqColor('F',0,1)!=self.SqFaceColor('F'):			# rotate bottom two layers until top middle matches front face
+			while self.SqColor('F',0,1)!=self.SqFaceColor('F'):			# move bottom two layers until top middle square matches front face
 				if time.time()-start>2:
 					raise Exception("infinite loop")
 				self.UCC()
 				self.YC()
-			if self.AdjColor('F',0,1,'Y') == self.SqFaceColor('L'):		# if top middle piece matches space to the left, solve it
+			if self.AdjColor('F',0,1,'Y') == self.SqFaceColor('L'):		# if top middle piece goes in the space to the left, solve it
 				self.UCC()										
 				self.LCC()
 				self.UC()
@@ -342,7 +341,7 @@ def GetSides(self):
 				self.FC()
 				self.UCC()
 				self.FCC()
-			elif self.AdjColor('F',0,1,'Y') == self.SqFaceColor('R'):		# if top middle piece matches space to the right, solve it
+			elif self.AdjColor('F',0,1,'Y') == self.SqFaceColor('R'):		# if top middle piece goes in the space to the right, solve it
 				self.UC()										
 				self.RC()
 				self.UCC()
@@ -352,24 +351,25 @@ def GetSides(self):
 				self.UC()
 				self.FC()
 
-def GetYellowCross(self):
-	start = time.time()
+def GetYellowCross(self):		# fourth major step in solving (solving all four side pieces on the bottom (now top) layer)
+	start = time.time()				# while loop safe catch
 	while not(self.faceU[0][1]==1 and self.faceU[1][0]==1 and self.faceU[1][2]==1 and self.faceU[2][1]==1):
+																# while not all the side squares on the top are yellow
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		if self.IsSideColor('U',1):												# perform algorithm until all top sides are yellow
-			while not (self.faceU[2][1]!=1 and self.faceU[1][0]==1):		# move cube so that the cross or bar or square is in position
+		if self.IsSideColor('U',1):						# if there is a yellow side square on the top
+			while not (self.faceU[2][1]!=1 and self.faceU[1][0]==1):
 				if time.time()-start>2:
 					raise Exception("infinite loop")
-				self.YC()
-			self.FC()
+				self.YC()								# rotate the cube until there is a yellow square to the right and not one on the bottom
+			self.FC()						# perform an algorithm to change the formation of yellow squares on the top
 			self.RC()
 			self.UC()
 			self.RCC()
 			self.UCC()
 			self.FCC()
-		else:
-			self.FC()
+		else:								# if there are no yellow side squares on the top
+			self.FC()						# perform the algorithm without rotating the cube first, as in the first case
 			self.RC()
 			self.UC()
 			self.RCC()
@@ -377,14 +377,15 @@ def GetYellowCross(self):
 			self.FCC()
 
 	while not(self.IsSolved('U',0,1) and self.IsSolved('U',1,0) and self.IsSolved('U',1,2) and self.IsSolved('U',2,1)):
+																	# while not all side pieces on top are solved
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		if self.SubSolveCount()>=2:
-			while not (self.IsSolved('U',1,2) and not self.IsSolved('U',2,1)):
-				if time.time()-start>2:
+		if self.SubSolveCount()>=2:								# if there is more than 1 yellow piece solved on top
+			while not (self.IsSolved('U',1,2) and not self.IsSolved('U',2,1)):		# rotate the cube until the piece to the right is
+				if time.time()-start>2:												#	solved but not the piece to the bottom
 					raise Exception("infinite loop")
 				self.YCC()
-			self.RC()												
+			self.RC()										# perform an algorithm that switches the two pieces to left and bottom
 			self.UC()
 			self.RCC()
 			self.UC()
@@ -393,15 +394,16 @@ def GetYellowCross(self):
 			self.UC()
 			self.RCC()
 			self.UC()
-		else:
-			self.UC()
+		else:					# if there are fewer than 2 solved yellow pieces, move the top layer to possibly
+			self.UC()			#	expose one of the pieces to a solved position
 
-def GetYellowCorners(self):
-	start = time.time()
+def GetYellowCorners(self):		# fifth major step in solving (solve all four corner pieces on yellow face (now top))
+	start = time.time()				# while loop safe catch
 	while not (self.IsPositioned('U',0,0) or self.IsPositioned('U',0,2) or self.IsPositioned('U',2,0) or self.IsPositioned('U',2,2)):
+																			# while none of the top corners are positioned
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		self.UC()											# perform algorithm until at least one corner is positioned
+		self.UC()									# perform algorithm that switches top right, top left and bottom left pieces in rotation
 		self.RC()
 		self.UCC()
 		self.LCC()
@@ -410,15 +412,16 @@ def GetYellowCorners(self):
 		self.UCC()
 		self.LC()											
 
-	while not self.IsPositioned('U',2,2):						# move cube until bottom right on top is positioned
+	while not self.IsPositioned('U',2,2):						# rotate cube until bottom right piece on top is positioned
 		if time.time()-start>2:
 			raise Exception("infinite loop")
 		self.YC()
 
 	while not (self.IsPositioned('U',0,0) and self.IsPositioned('U',0,2) and self.IsPositioned('U',2,0) and self.IsPositioned('U',2,2)):
+																	# while not all corner pieces are in correct position
 		if time.time()-start>2:
 			raise Exception("infinite loop")
-		self.UC()											# perform algorithm until all corners are positioned
+		self.UC()									# perform algorithm that switches top right, top left and bottom left pieces in rotation
 		self.RC()
 		self.UCC()
 		self.LCC()
@@ -427,8 +430,8 @@ def GetYellowCorners(self):
 		self.UCC()
 		self.LC()
 
-	for i in range(4):										# perform algorithm for each corner until yellow faces up
-		while self.faceU[2][2]!=1:
+	for i in range(4):								# perform algorithm that rotates corner pieces for each corner until each is solved
+		while self.faceU[2][2]!=1:					#	by this point, all four corner pieces should be positioned correctly
 			if time.time()-start>2:
 				raise Exception("infinite loop")
 			self.RCC()
@@ -437,7 +440,7 @@ def GetYellowCorners(self):
 			self.DC()
 		self.UCC()
 
-	while not self.IsSolved('U',0,0):
+	while not self.IsSolved('U',0,0):		# move top layer until the top left corner is solved (resulting in all four corners being solved)
 		if time.time()-start>2:
 			raise Exception("infinite loop")
 		self.UCC()
@@ -445,8 +448,8 @@ def GetYellowCorners(self):
 def CompleteSolve(self):
 	self.GetWhiteCross()
 	self.GetWhiteCorners()
-	self.ZC()
-	self.ZC()
+	self.ZC()					# rotates the cube so that the bottom face is now the top face, accomidating the proceeding functions that 
+	self.ZC()					# assume this rotation has taken place. This makes the algorithms and conditionals easier to visualize
 	self.GetSides()
 	self.GetYellowCross()
 	self.GetYellowCorners()

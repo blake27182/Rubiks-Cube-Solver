@@ -121,4 +121,13 @@ def Compress(history):		# returns a compressed version of history making up for 
 			else :									# if there are no available compressions in range
 				change = False						# set change to false to move the current element by one
 		i+=1
+
+	i=0
+	while i<len(history)-1:							# second pass for 180 movements
+		if history[i] == history[i+1]:				# combining like movements makes the motor movement more precise
+			history[i] = history[i][0]+'180'
+			del history[i+1]
+		i+=1
+
+
 	return history					# return the compressed history

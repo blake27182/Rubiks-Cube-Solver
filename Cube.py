@@ -22,7 +22,14 @@ class Cube:
 
 	history = []		# history log for all moves made by any transformer member function
 
-	def PrintList(self, li, name="none"):		# prints a formatted list of a face to the console
+	def PrintList(self, li, name="none"):
+		"""Formats and prints the face data to the console.
+
+		Args:
+			li (:obj:`list` of :obj:`list` of int): Two-dimensional list containing the face data
+			name (str): Name of the face
+
+		"""
 		n=0
 		for i in li:
 			if(n!=1):

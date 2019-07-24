@@ -11,41 +11,60 @@ import transformers
 import solvers
 import copy
 
+
 class Cube:
+	"""This object represents the rubik's cube.
+
+	Each face has its own data member where every int is a different color
+
+	Attributes:
+		u (:obj:`list` of :obj:`list` of int): up face
+		d (:obj:`list` of :obj:`list` of int): down face
+		l (:obj:`list` of :obj:`list` of int): left face
+		r (:obj:`list` of :obj:`list` of int): right face
+		f (:obj:`list` of :obj:`list` of int): front face
+		b (:obj:`list` of :obj:`list` of int): back face
+
+	"""
 	def __init__(self, u, d, l, r, f, b):
-		self.faceU = copy.deepcopy(u)		#Andrew's help
-		self.faceD = copy.deepcopy(d)		# Initializes data members from parameters by value instead of making reference variables
+		self.faceU = copy.deepcopy(u)
+		self.faceD = copy.deepcopy(d)
 		self.faceL = copy.deepcopy(l)
 		self.faceR = copy.deepcopy(r)
 		self.faceF = copy.deepcopy(f)
 		self.faceB = copy.deepcopy(b)
+		self.history = []		# history log for all moves made during solve
 
-	history = []		# history log for all moves made by any transformer member function
-
-	def PrintList(self, li, name="none"):
+	@staticmethod
+	def PrintList(li, name="none"):
 		"""Formats and prints the face data to the console.
 
 		Args:
-			li (:obj:`list` of :obj:`list` of int): Two-dimensional list containing the face data
+			li (:obj:`list` of :obj:`list` of int): Two-dimensional list 
+				containing the face data
 			name (str): Name of the face
 
 		"""
-		n=0
+		n = 0
 		for i in li:
-			if(n!=1):
+			if n != 1:
 				print(i)
 			else:
-				print(i,name)
-			n+=1
+				print(i, name)
+			n += 1
 		print()
 
-	def PrintCube(self):						# Prints the entire cube formatted by PrintList
-		self.PrintList(self.faceU,"U")
-		self.PrintList(self.faceD,"D")
-		self.PrintList(self.faceL,"L")
-		self.PrintList(self.faceR,"R")
-		self.PrintList(self.faceF,"F")
-		self.PrintList(self.faceB,"B")
+	def PrintCube(self):
+		"""Prints the entire cube formatted by PrintList.
+
+		"""
+		self.PrintList(self.faceU, "U")
+		self.PrintList(self.faceD, "D")
+		self.PrintList(self.faceL, "L")
+		self.PrintList(self.faceR, "R")
+		self.PrintList(self.faceF, "F")
+		self.PrintList(self.faceB, "B")
+		print()
 
 	# Solving Functions
 
@@ -64,27 +83,26 @@ class Cube:
 	GetYellowCross = solvers.GetYellowCross
 	GetYellowCorners = solvers.GetYellowCorners
 	CompleteSolve = solvers.CompleteSolve
-		
-	
+
 	# Transforming Functions
 
-	UC  = transformers.UC 					# Importing member function definitions from transformers
+	UC = transformers.UC 					# Importing member function definitions from transformers
 	UCC = transformers.UCC 
-	DC  = transformers.DC 
+	DC = transformers.DC
 	DCC = transformers.DCC 
-	LC  = transformers.LC 
+	LC = transformers.LC
 	LCC = transformers.LCC 
-	RC  = transformers.RC 
+	RC = transformers.RC
 	RCC = transformers.RCC 
-	FC  = transformers.FC 
+	FC = transformers.FC
 	FCC = transformers.FCC 
-	BC  = transformers.BC 
+	BC = transformers.BC
 	BCC = transformers.BCC 
-	XC  = transformers.XC 
+	XC = transformers.XC
 	XCC = transformers.XCC 
-	YC  = transformers.YC 
+	YC = transformers.YC
 	YCC = transformers.YCC 
-	ZC  = transformers.ZC 
+	ZC = transformers.ZC
 	ZCC = transformers.ZCC 
 	Scramble = transformers.Scramble 
 

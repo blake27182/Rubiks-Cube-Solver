@@ -11,7 +11,14 @@ import RPi.GPIO as G
 from time import sleep
 
 
-def MotMov50(direction, pinSet):
+def MotMov90(direction, pinSet):
+    """Moves a given motor 90º in a given direction
+
+    Args:
+        direction (int): 0 for clockwise, 1 for counterclockwise
+        pinSet (:obj:`tuple` of int): GPIO pin set for the given motor
+            should be in (Dir, Step, Sleep) format
+    """
     dirPin, stepPin, sleepPin = pinSet
     try:
         G.output(sleepPin, 1)   # wake up
@@ -28,6 +35,12 @@ def MotMov50(direction, pinSet):
 
 
 def MotMov180(pinSet):
+    """Moves a given motor 180º
+
+    Args:
+        pinSet (:obj:`tuple` of int): GPIO pin set for the given motor
+            should be in (Dir, Step, Sleep) format
+    """
     dirPin, stepPin, sleepPin = pinSet
     try:
         G.output(sleepPin, 1)   # wake up
@@ -44,6 +57,12 @@ def MotMov180(pinSet):
 
 
 def PrintToBot(moves):
+    """Actuates the motors in the robot.
+
+    Args:
+        moves (:obj:`list` of str): list of moves to make. Must be in
+            the format written by the Cube class.
+    """
     # Broadcom Memory
     G.setmode(G.BCM)
 
@@ -88,10 +107,12 @@ def PrintToBot(moves):
                 pinSet = Fset
             elif code[0] == 'B':
                 pinSet = Bset
+            else:
+                raise Exception("Bad move code")
 
             if len(code) < 4:
                 direction = len(code)-2     # clockwise is 0 counterclockwise is 1
-                MotMov50(direction, pinSet)
+                MotMov90(direction, pinSet)
             else:
                 MotMov180(pinSet)
 

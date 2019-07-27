@@ -9,7 +9,7 @@ Make sure that the pins connected to each stepper chip are entered into the Pipe
 Be sure to enter the convention you are using to refer to the pins in the G.setmode()
 
 Configuring the Power Supply:
-Make sure the voltage is at *** and the maximum current limit is set to ***
+Make sure the voltage is at  and the maximum current limit is set to 1.5A
 
 Configuring the DRV8825:
 Turn the power supply on

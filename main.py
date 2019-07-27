@@ -10,7 +10,7 @@
 from Cube import Cube
 from Transcriber import RealMovesOnly as Realify
 from Transcriber import Compress
-# from Piper import PrintToBot
+from Piper import PrintToBot
 
 
 def main():
@@ -44,7 +44,7 @@ def main():
     print(len(cmpMoves))				# Prints the number of moves
     print(cmpMoves)                     # Prints the moves
 
-    # PrintToBot(realMoves)
+    PrintToBot(realMoves)
 
 
 if __name__ == '__main__':

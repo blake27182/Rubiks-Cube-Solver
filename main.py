@@ -44,7 +44,7 @@ def main():
     print(len(cmpMoves))				# Prints the number of moves
     print(cmpMoves)                     # Prints the moves
 
-    PrintToBot(realMoves)
+    # PrintToBot(realMoves)
 
 
 if __name__ == '__main__':

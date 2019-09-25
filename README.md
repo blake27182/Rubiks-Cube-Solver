@@ -1,6 +1,12 @@
 # Rubiks-Cube-Solver
 This project is still in progress
 
+Currently, the biggest problem is with the hardware. The stepper motors sometimes under-rotate causing the other faces to lock up. I think either greasing the cube or the compression joints could help with this. I did fabricate all of the parts with a crooked bandsaw, an angle grinder and a Flux-core welder, so one cannot expect too much precision right away.
+
+###########
+
+TECH SPECS
+
 I used a Raspberry Pi to control my robot, but if you choose to use something else, be sure to change the 
 Piper.py to accomidate your operating system and hardware
 
